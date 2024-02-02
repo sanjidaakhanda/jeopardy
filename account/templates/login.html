@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{%  load crispy_forms_tags %}
+{% load static %}
+{% block title %} Login Page {% endblock %}
+{% block css %}
+<style>
+      .head1 {
+    color: #FBAD30;
+    font-size: 2rem;
+    font-weight: bold;
+    height: 50px;
+  }
+
+  .head2 {
+    color: #EF4926;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  </style>
+  {% endblock %}
+
+  {% block body %}
+  
+  <h1 class="bg-light rounded-pill px-4 py-3 text-uppercase font-weight-bold text-warning fw-bold text-center">Log in </h1>
+  <hr class=" m-3">
+  <div class="d-flex justify-content-evenly m-5">
+
+ 
+     
+    <div class=" container row py-5 p-4 bg-white rounded shadow-sm mx-auto">
+      <div class="col-lg-6">
+          <form class="row g-4" method="POST" action="">{% csrf_token %}
+            <div class="col-md-12">
+                <label for="inputname" class="form-label" style="font-weight: bold;"><i>
+                        Username</i></label>
+                <input type="text" placeholder="Enter Username" style="text-align: center;"
+                    class="form-control" id="username" name="username" required>
+            </div>
+
+            <div class="col-md-12">
+                <label for="inputname" class="form-label" style="font-weight: bold;"><i>
+                        Password</i></label>
+                <input type="password" placeholder="Enter Password" style="text-align: center;"
+                    class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-warning text-dark fw-bold">Submit</button>
+    
+
+             
+    </div>  
+    <div class="col-md-6">
+      <img class="img-fluid rounded w-75 p-3"  src="{% static 'login2.jpg' %}" />
+  </div>       
+ 
+  {% endblock %}

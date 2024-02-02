@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %} Add Quiz {% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <form action="{% url 'add_quiz' %}" method="POST"> {% csrf_token %}
+    {{ form | crispy }}
+    <button type="submit" class="btn btn-info m-4">Submit</button>
+</form>
+</div>
+{% endblock %}

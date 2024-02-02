@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% block title %} Quiz {% endblock %}
+
+{% block css %}
+<style>
+  .attempt {
+    --gradient: linear-gradient(to left top, #FBAD30 10%, #aaaaaa 90%) !important;
+  }
+
+  body {
+    background: #222;
+  }
+
+  .card {
+    background: #333;
+    border: 1px solid #FBAD30;
+    color: rgba(250, 250, 250, 0.8);
+    margin-bottom: 3rem;
+    {% comment %} box-shadow: 2px 2px 2px 0px; {% endcomment %}
+    transition: box-shadow 0.5s ease;
+
+  }
+  .card:hover {
+    box-shadow: 5px 5px 10px 0px ; 
+}
+
+  #btn {
+    border: 5px solid;
+    border-image-slice: 1;
+    background: var(--gradient) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    border-image-source: var(--gradient) !important;
+    text-decoration: none;
+    position: relative;
+    left: 80px;
+  }
+
+  .head1 {
+    color: #FBAD30;
+    font-size: 2rem;
+    font-weight: bold;
+    height: 50px;
+  }
+  .head1:hover, 
+  .head1:focus {
+    color: #FBAD30;
+    font-size: 3rem;
+    font-weight: bold;
+    height: 50px;
+  
+  }
+  .head2 {
+    color: #EF4926;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  #btn:hover,
+  #btn:focus {
+    background: var(--gradient) !important;
+    -webkit-background-clip: none !important;
+    -webkit-text-fill-color: #fff !important;
+    border: 5px solid #fff !important;
+    box-shadow: #222 1px 0 10px;
+    text-decoration: none;
+  }
+
+  .logo {
+    position: relative;
+    bottom: 2rem;
+  }
+
+  .container-fluid {
+    height: 40px;
+  }
+ 
+</style>
+{% endblock %}
+{% load static %}
+
+{% block body %}
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-title"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      {% if user.is_authenticated %}
+      <div class="modal-body" id="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="start-quiz" class="btn btn-primary">Start Quiz</button>
+      </div>
+      {% else %}
+      <div class="modal-body">
+        <h3>Login first to start the quiz</h3>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<br><br><br>
+
+
+{% comment %} home body {% endcomment %}
+<div class="d-flex flex-wrap justify-content-evenly px-5 pt-3 align-items-center m-4 ">
+
+  <div class="col-6 p-3">
+    <h1 class="text-warning m-3" id="header" >Welcome to Jeopardy </h1>
+    <p class="text-light"> <span style="color:coral; font-size: 20px; font-style: italic;">Welcome to The Ultimate Jeopardy! Quiz Experience.</span>
+
+      Unleash your knowledge and challenge yourself with our exciting Jeopardy! quiz website. Step into a world of fun, competition, and learning as you explore a diverse range of categories and test your skills against others.
+      mmerse yourself in a wide array of categories spanning general knowledge, science, history, pop culture, and more. There's something for everyone.
+      Enjoy an engaging and user-friendly interface that brings the Jeopardy! experience to your fingertips. Click, answer, and watch your points soar.
+      Challenge friends or participate in real-time multiplayer sessions. Prove your knowledge supremacy and climb to the top of the leaderboards.</p>
+  </div>
+  <div class="col-6">
+<img class="w-75 img-fluid p-3" src="{% static 'header1.jpg' %}" />
+  </div>
+</div>
+
+
+<!-- cards -->
+<div class="container">
+  <div class="container mx-auto mt-5">
+    <div class="row">
+
+      {% for i in quiz %}
+      <div class="col-md-4">
+        <div class="card" style="width: 21rem;">
+          <div class="card-body">
+            <h5 class="card-title text-warning" style="text-align: center;">{{i.name}}</h5>
+            <br>
+            <p class="card-text">{{ i.desc|slice:":100" }}</p>
+            <br>
+            <button data-bs-target="#exampleModal" data-bs-toggle="modal" data-time="{{i.time}}"
+              data-questions="{{i.number_of_questions}}" data-name="{{i.name}}" data-id="{{i.id}}" id="btn"
+              style="justify-content: center;" class="attempt btn mr-2 modal-button"><i class="fas fa-link"></i>Start
+              Quiz</button>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block js %}
+<script>
+  const modalBtns = [...document.getElementsByClassName('modal-button')]
+  const modalBody = document.getElementById('modal-body')
+  const modaltitle = document.getElementById('modal-title')
+  const startQuiz = document.getElementById('start-quiz')
+
+  const url = window.location.href
+
+  modalBtns.forEach(modalBtn => modalBtn.addEventListener('click', () => {
+    const id = modalBtn.getAttribute('data-id')
+    const name = modalBtn.getAttribute('data-name')
+    const numberOfQuestions = modalBtn.getAttribute('data-questions')
+    const time = modalBtn.getAttribute('data-time')
+  
+
+    modaltitle.innerHTML = `${name}`
+
+    modalBody.innerHTML = `
+    <span class="fw-bold text-success"> ${name}  quiz</span> 
+    <br>
+    Total multiple choice questions <span class="fw-bold text-danger">${numberOfQuestions}</span> <br>
+    Total <span class="fw-bold text-danger">${time}</span>  min to complete.
+    <br>
+    All the best for the quiz!!!.
+
+    `
+   
+
+
+     startQuiz.addEventListener('click', () => {
+      window.location.href = `${url}quiz/${id}/`;
+
+ 
+   });
+
+
+  }));
+</script>
+{% endblock %}
